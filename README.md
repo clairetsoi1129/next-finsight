@@ -1,9 +1,13 @@
 # Feature:
 
-1. Allow upload IB portfolio trade and export a csv with the required field
-2. Show price alert in alert box when website is open
-3. Allow upload of exchange rate and store in DB
-4. Setup postgresql DB
+- Allow upload IB portfolio trade and export a csv with the required field
+- Show the uploaded data in data grid
+- Show price alert in alert box when website is open
+- Allow upload of exchange rate and store in DB
+- Calculate the capital gian
+- Calculate the interest gain
+- Calculate the dividend gain
+- Show portfolio diagram in pie chart
 
 # What have done?
 
@@ -22,9 +26,18 @@ npx create-next-app@latest --experimental-app
 npm install -D typescript ts-node @types/node
 
 npm install --save-dev @tailwindcss/typography
+
+npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
+npm install @mui/x-data-grid
+
+npm install react-redux @reduxjs/toolkit
+
+npm install tw-elements
+npm i --save-dev @types/react-datepicker
 ```
 
 ## CSV Parser
+
 ```
 npm install csv-parser
 

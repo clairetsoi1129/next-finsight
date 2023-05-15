@@ -1,10 +1,16 @@
 import Image from "next/image";
-import HoldingUploader from "./(home)/HoldingUploader";
 
 export default function Home() {
   return (
-    <main className="px-10 leading-7">
-      <HoldingUploader />
-    </main>
+    <section className="w-full flex-center flex-col">
+      <h1 className="head_text text-center">
+        Track your investment porfolio
+        <br className="max-md:hidden" />
+        <span className="orange_gradient text-center"></span>
+      </h1>
+      <p className="desc text-center">
+        Next finsight is an open-source investment portfolio dashboard
+      </p>
+    </section>
   );
 }

@@ -1,5 +1,10 @@
+import Navbar from "./(shared)/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
+import "tw-elements/dist/css/tw-elements.min.css";
+
+const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className} suppressHydrationWarning={true}>
+        <Navbar />
         {children}
       </body>
     </html>

@@ -2,11 +2,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+
 html,
 body,
 #root,
 .app {
   height: 100%;
   width: 100%;
-  @apply text-sm;
+  font-family: "Inter", sans-serif;
+  /* background-color: #1f2026; */
+  /* @apply text-sm; */
+}
+
+.form_input {
+  @apply w-full flex rounded-lg mt-2 p-3 text-sm text-gray-500 outline-blue-100 border-2;
 }
