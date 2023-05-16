@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { prisma } from "../client";
-import { NextApiRequest, NextApiResponse } from "next";
 import { CSVData, Holding } from "@/app/types";
 
 export async function POST(req: Request, res: Response) {

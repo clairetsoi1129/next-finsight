@@ -4,13 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { Holding } from "../types";
 
-import dynamic from "next/dynamic";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
-const DynamicDatepicker = dynamic(() => import("../(shared)/NfDatePicker"), {
-  ssr: false,
-});
 
 type Props = {
   type: string;
@@ -43,12 +38,13 @@ const HoldingForm = ({
       >
         <label>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            Ticker
+            Trade Date
           </span>
 
           <DatePicker
             dateFormat="MM/dd/yyyy"
             selected={tradeDate}
+            className="form_input"
             onChange={(date) => {
               date && setTradeDate(date);
               date &&

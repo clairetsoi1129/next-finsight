@@ -1,10 +1,10 @@
+import { ThemeProvider } from "@emotion/react";
 import Navbar from "./(shared)/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { Roboto } from "next/font/google";
-import "tw-elements/dist/css/tw-elements.min.css";
-
-const roboto = Roboto({ weight: "400", subsets: ["latin"] });
+import { useMemo } from "react";
+import { createTheme } from "@mui/material/styles";
+import { themeSettings } from "./theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,12 +18,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = useMemo(() => createTheme(themeSettings), []);
   return (
-    <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    <ThemeProvider theme={theme}>
+      <html lang="en">
+        <body className={inter.className} suppressHydrationWarning={true}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </ThemeProvider>
   );
 }
