@@ -5,9 +5,9 @@ import { CSVData, Holding } from "@/app/types";
 export async function POST(req: Request, res: Response) {
   try {
     const data = await req.json();
-    console.log("Received data:", data);
+    console.log("POST Received data:", data);
     const csvData: CSVData = data.data;
-    console.log("Received CSV data:", csvData);
+    console.log("POST Received CSV data:", csvData);
 
     if (!csvData || !Array.isArray(csvData)) {
       return individualCreate(data);
@@ -22,8 +22,8 @@ export async function POST(req: Request, res: Response) {
 export async function bulkCreate(data: CSVData) {
   try {
     // const data = await req.json();
-    const csvData = data.data;
-    console.log("Received CSV data:", csvData);
+    const csvData = data;
+    console.log("bulkCreate Received CSV data:", csvData);
 
     if (!Array.isArray(csvData)) {
       console.error("Invalid data format: Expected an array");
