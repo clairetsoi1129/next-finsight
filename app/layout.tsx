@@ -2,9 +2,9 @@ import { ThemeProvider } from "@emotion/react";
 import Navbar from "./(shared)/Navbar";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { useMemo } from "react";
-import { createTheme } from "@mui/material/styles";
-import { themeSettings } from "./theme";
+// import { useMemo } from "react";
+// import { createTheme } from "@mui/material/styles";
+// import { themeSettings } from "./theme";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,15 +18,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useMemo(() => createTheme(themeSettings), []);
+  // const theme = useMemo(() => createTheme(themeSettings), []);
   return (
-    <ThemeProvider theme={theme}>
-      <html lang="en">
-        <body className={inter.className} suppressHydrationWarning={true}>
-          <Navbar />
-          {children}
-        </body>
-      </html>
-    </ThemeProvider>
+    // <ThemeProvider theme={theme}>
+    <html lang="en">
+      <body className={inter.className} suppressHydrationWarning={true}>
+        <Navbar />
+        {children}
+      </body>
+    </html>
+    // </ThemeProvider>
   );
 }
