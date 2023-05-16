@@ -23,7 +23,14 @@ const UploadHolding = () => {
         }
       );
 
-      console.log("Data inserted into PostgreSQL");
+      if (response.ok) {
+        console.log("Data inserted into PostgreSQL");
+      } else {
+        console.error(
+          "Error inserting data into PostgreSQL. Response status:",
+          response.status
+        );
+      }
     } catch (error) {
       console.error("Error inserting data into PostgreSQL:", error);
     }
