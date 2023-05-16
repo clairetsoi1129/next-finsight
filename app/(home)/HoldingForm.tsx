@@ -194,15 +194,15 @@ const HoldingForm = ({
           </label>
         </div>
 
-        <div className="flex-end mx-3 mb-5 gap-4">
-          <Link href="/" className="text-gray-500 text-sm">
+        <div className="flex gap-4 mb-10">
+          <Link href="/" className="btn btn-secondary">
             Cancel
           </Link>
 
           <button
             type="submit"
             disabled={submitting}
-            className="px-5 py-1.5 text-sm bg-primary-orange rounded-full text-black"
+            className="btn btn-primary"
           >
             {submitting ? `${type}ing...` : type}
           </button>

@@ -1,8 +1,13 @@
 "use client";
 
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { CSVData } from "../types";
 import csvParser from "csv-parser";
+import { FilePond, registerPlugin } from "react-filepond";
+import "filepond/dist/filepond.min.css";
+import { FilePondFile } from "filepond";
+// Register the necessary plugins for FilePond
+registerPlugin();
 
 type CSVUploaderProps = {
   columnHeaders: string[];
@@ -13,17 +18,14 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
   columnHeaders,
   onDataParsed,
 }) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) setSelectedFile(file);
-  };
+  const filePondRef = useRef<FilePond>(null);
 
   const handleFileUpload = async () => {
-    if (selectedFile) {
+    const files = filePondRef.current?.getFiles();
+    if (files && files.length > 0) {
       try {
-        const csvString = await selectedFile.text();
+        const file = files[0].file;
+        const csvString = await file.text();
         const parsedData = await parseCSV(csvString);
         onDataParsed(parsedData);
       } catch (error) {
@@ -57,9 +59,9 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
   };
 
   return (
-    <div>
-      <input type="file" accept=".csv" onChange={handleFileChange} />
-      <button onClick={handleFileUpload} disabled={!selectedFile}>
+    <div className="mx-10">
+      <FilePond ref={filePondRef} acceptedFileTypes={[".csv"]} />
+      <button onClick={handleFileUpload} className="btn btn-primary">
         Upload
       </button>
     </div>

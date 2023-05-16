@@ -32,13 +32,20 @@ npm install @mui/x-data-grid
 
 npm install react-redux @reduxjs/toolkit
 
-npm install tw-elements
+
 npm i --save-dev @types/react-datepicker
+
+* Install filepond for drag and drop file to upload
+```
+
+npm install react-filepond filepond --save
+
 ```
 
 ## CSV Parser
 
 ```
+
 npm install csv-parser
 
 ```
@@ -48,49 +55,65 @@ npm install csv-parser
 ### Install Postgresql
 
 ```
+
 brew install postgresql
+
 ```
 
 ### Install Postgresql Admin
 
 ```
+
 brew install --cask pgadmin4
+
 ```
 
 ### Start Postgresql
 
 ```
+
 brew services start postgresql@14
+
 ```
 
 ### Run Postgresql
 
 ```
+
 psql postgres
+
 ```
 
 ### List the database
 
 ```
+
 \l
+
 ```
 
 ### Create Database with name nextfinsight
 
 ```
+
 CREATE DATABASE nextfinsight;
+
 ```
 
 ### Create User with name dummy and grant all access to database nextfinsight to this user
 
 ```
+
 CREATE USER dummy WITH PASSWORD '<your-password>';
+
 ```
 
 ### Grant permission to the user dummy
 
 ```
+
 GRANT ALL PRIVILEGES ON DATABASE nextfinsight TO dummy;
+
 ```
 
 > Replace <your-password> with any password you like.
@@ -98,12 +121,15 @@ GRANT ALL PRIVILEGES ON DATABASE nextfinsight TO dummy;
 ### Connect to database nextfinsight
 
 ```
+
 \c nextfinsight
+
 ```
 
 ## Prisma
 
 ```
+
 npm install prisma --save-dev
 npx prisma init
 
@@ -114,7 +140,9 @@ npx prisma init
 - Init prisma
 
 ```
+
 npx prisma init
+
 ```
 
 - Create Post schema in schema.prisma
@@ -122,7 +150,9 @@ npx prisma init
 - Push to Prisma (This step will solve the issue in Cannot find module '@prisma/client' in client.ts)
 
 ```
+
 npx prisma db push
+
 ```
 
 - Check the Holding table is created
@@ -132,8 +162,10 @@ npx prisma db push
 > Run below command to see the data in Prisma studio
 
 ```
+
 npx prisma studio
-```
+
+````
 
 > Or, goto postgres console to query the data directly
 
@@ -151,7 +183,7 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-```
+````
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 

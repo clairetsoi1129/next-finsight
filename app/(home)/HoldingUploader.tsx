@@ -31,6 +31,13 @@ const HoldingUploader = () => {
 
   return (
     <div>
+      <h1 className="head_text text-left px-5">
+        <span className="blue_gradient">Upload Holding</span>
+      </h1>
+      <p className="desc text-left max-w-md px-5">
+        Upload the holdings in your portfolio
+      </p>
+
       <CSVUploader
         columnHeaders={columnHeadersTradeIB}
         onDataParsed={handleDataParsed}
