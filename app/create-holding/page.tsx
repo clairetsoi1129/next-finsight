@@ -30,7 +30,7 @@ const CreateHolding = () => {
     try {
       if (!holding) return;
 
-      const response = await fetch("/api/holding", {
+      const response = await fetch("/api/holding/new", {
         method: "POST",
         body: JSON.stringify({
           tradeDate: holding.tradeDate,

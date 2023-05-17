@@ -10,7 +10,7 @@ const Navbar = (props: Props) => {
         <div className="flex justify-between items-center gap-10">
           <Link href="/upload-holding">Upload Porfolio</Link>
           <Link href="/create-holding">Input Portfolio Manually</Link>
-          <Link href="/">Calculate the Capital Gain</Link>
+          <Link href="/dashboard">Calculate the Capital Gain</Link>
         </div>
         <div>
           <p>Sign In</p>
