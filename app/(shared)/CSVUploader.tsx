@@ -71,7 +71,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
   };
 
   return (
-    <div className="mx-10">
+    <div>
       <FilePond ref={filePondRef} acceptedFileTypes={[".csv"]} />
       <button onClick={handleFileUpload} className="btn btn-primary">
         Upload

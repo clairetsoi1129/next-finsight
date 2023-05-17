@@ -4,8 +4,10 @@ import React from "react";
 import CSVUploader from "../(shared)/CSVUploader";
 import { CSVData } from "../types";
 import { columnHeadersTradeIB } from "../columnHeaders";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 
 const UploadHolding = () => {
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const handleDataParsed = async (dataToCreate: CSVData[]) => {
     // Do something with the parsed data
     console.log(dataToCreate);
@@ -37,13 +39,25 @@ const UploadHolding = () => {
   };
 
   return (
-    <div>
+    <Box
+      display="grid"
+      gap="15px"
+      p="10px"
+      m="10px"
+      gridTemplateColumns="repeat(1, minmax(0, 1fr))"
+      sx={{
+        "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
+      }}
+    >
+      <Typography sx={{ fontWeight: "bold" }} m="10px">
+        Upload Holding Transaction
+      </Typography>
       <CSVUploader
         fileType="holding"
         columnHeaders={columnHeadersTradeIB}
         onDataParsed={handleDataParsed}
       />
-    </div>
+    </Box>
   );
 };
 

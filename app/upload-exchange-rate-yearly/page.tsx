@@ -6,9 +6,10 @@ import { CSVData } from "../types";
 import { columnHeadersYearlyExchangeRate } from "../columnHeaders";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { Box } from "@mui/material";
+import { Box, Typography, useMediaQuery } from "@mui/material";
 
 const UploadYearlyExchangeRate = () => {
+  const isNonMobile = useMediaQuery("(min-width:600px)");
   const [endDate, setEndDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
 
@@ -63,24 +64,25 @@ const UploadYearlyExchangeRate = () => {
 
   return (
     <Box
+      display="grid"
+      gap="15px"
+      p="1"
+      m="1"
+      gridTemplateColumns="repeat(1, minmax(0, 1fr))"
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        p: 1,
-        m: 1,
-        bgcolor: "background.paper",
-        borderRadius: 1,
-        justifyContent: "space-between",
+        "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
       }}
     >
+      <Typography sx={{ fontWeight: "bold" }} m="10px">
+        Upload Yearly Exchange Rate
+      </Typography>
       <Box
+        display="grid"
+        gap="15px"
+        m="10px"
+        gridTemplateColumns="repeat(2, minmax(0, 1fr))"
         sx={{
-          p: 1,
-          m: 1,
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          justifyContent: "space-between",
-          width: "100%",
+          "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
         }}
       >
         <label>
@@ -112,13 +114,12 @@ const UploadYearlyExchangeRate = () => {
         </label>
       </Box>
       <Box
+        display="grid"
+        gap="15px"
+        m="10px"
+        gridTemplateColumns="repeat(1, minmax(0, 1fr))"
         sx={{
-          p: 1,
-          m: 1,
-          bgcolor: "background.paper",
-          borderRadius: 1,
-          justifyContent: "space-between",
-          width: "100%",
+          "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
         }}
       >
         <CSVUploader

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardBox from "../(shared)/DashboardBox";
 import { Holding } from "@prisma/client";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { Box, Button } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 
 type Props = {};
 
@@ -184,6 +184,7 @@ const Row1 = (props: Props) => {
 
   return (
     <Box sx={{ display: "grid" }}>
+      <Typography>Trade Transaction</Typography>
       <Box sx={{ height: 400, width: "100%" }}>
         <DataGrid
           rows={holdings}
