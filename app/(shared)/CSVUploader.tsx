@@ -12,11 +12,13 @@ registerPlugin();
 type CSVUploaderProps = {
   columnHeaders: string[];
   onDataParsed: (data: CSVData[]) => void;
+  fileType: string;
 };
 
 const CSVUploader: React.FC<CSVUploaderProps> = ({
   columnHeaders,
   onDataParsed,
+  fileType,
 }) => {
   const filePondRef = useRef<FilePond>(null);
 
@@ -26,7 +28,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
       try {
         const file = files[0].file;
         const csvString = await file.text();
-        const parsedData = await parseCSV(csvString);
+        const parsedData = await parseCSV(csvString, fileType);
         onDataParsed(parsedData);
       } catch (error) {
         console.error("Error parsing CSV:", error);
@@ -34,11 +36,20 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
     }
   };
 
-  const parseCSV = (csvString: string): Promise<CSVData[]> => {
+  const parseCSV = (
+    csvString: string,
+    fileType: string
+  ): Promise<CSVData[]> => {
     return new Promise((resolve, reject) => {
       const data: CSVData[] = [];
 
+      let skip = 0;
+      if (fileType === "exchangeRate") {
+        skip = 1;
+      }
+
       const parser = csvParser({
+        skipLines: skip,
         mapHeaders: ({ header }) => header.replace(/"/g, ""),
       });
 
@@ -54,6 +65,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
         });
 
       parser.write(csvString);
+      console.log(`csvString:${csvString}`);
       parser.end();
     });
   };

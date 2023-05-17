@@ -39,6 +39,7 @@ const UploadHolding = () => {
   return (
     <div>
       <CSVUploader
+        fileType="holding"
         columnHeaders={columnHeadersTradeIB}
         onDataParsed={handleDataParsed}
       />

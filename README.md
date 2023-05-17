@@ -175,7 +175,7 @@ npx prisma init
 
 ```
 
-- Create Post schema in schema.prisma
+- Create schema in schema.prisma (run when there is any update in schema.prisam)
 
 - Push to Prisma (This step will solve the issue in Cannot find module '@prisma/client' in client.ts)
 

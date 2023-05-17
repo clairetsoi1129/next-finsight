@@ -37,3 +37,8 @@ const csvToModelMapping: { [key: string]: keyof Holding } = {
   IBCommission: "brokerage",
   IBCommissionCurrency: "brokerageCurrency",
 };
+
+export const columnHeadersYearlyExchangeRate: string[] = [
+  "Currency Code",
+  "Sterling value of Currency Unit £",
+];

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DashboardBox from "../(shared)/DashboardBox";
 import { Holding } from "@prisma/client";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import { Box } from "@mui/material";
+import { Box, Button } from "@mui/material";
 
 type Props = {};
 
@@ -17,11 +17,21 @@ const Row1 = (props: Props) => {
 
   const [rowsSummary, setRowsSummary] = useState<RowSum[]>([]);
 
+  const [startDate, setStartDate] = useState<string>("2019-04-06");
+  const [endDate, setEndDate] = useState<string>("2023-04-05");
+
+  const filterByDate = () => {
+    console.log(`filterDate****`);
+    setStartDate("2022-04-06");
+    setEndDate("2023-04-05");
+  };
+
   useEffect(() => {
     const getAllHoldings = async () => {
       // Step 1: Get the trading records from Database
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_URL}/api/holding`
+        // `${process.env.NEXT_PUBLIC_URL}/api/holding`
+        `${process.env.NEXT_PUBLIC_URL}/api/holding?startDate=${startDate}&endDate=${endDate}`
       );
       const tradingRecords = await response.json();
       console.log(`AllHoldings: ${tradingRecords}`);
@@ -91,7 +101,7 @@ const Row1 = (props: Props) => {
     };
 
     getAllHoldings();
-  }, []);
+  }, [startDate, endDate]);
 
   const columnsRaw: GridColDef[] = [
     { field: "id", headerName: "ID", width: 50 },
@@ -189,6 +199,9 @@ const Row1 = (props: Props) => {
           checkboxSelection
           disableRowSelectionOnClick
         />
+      </Box>
+      <Box>
+        <Button onClick={filterByDate}>Filter</Button>
       </Box>
       <Box sx={{ height: 300, width: "100%" }}>
         <DataGrid

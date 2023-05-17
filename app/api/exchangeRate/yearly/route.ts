@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../client";
+import { prisma } from "../../client";
 import { CSVData, Holding } from "@/app/types";
 import { NextApiRequest, NextApiResponse } from "next";
 
@@ -36,11 +36,24 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
+export function dateStrToDate(dateString: string) {
+  const [month, day, year] = dateString
+    .split("/")
+    .map((component: string) => parseInt(component, 10));
+
+  return new Date(year, month - 1, day); // Month is zero-based in JavaScript Date constructor
+}
+
 export async function POST(req: Request, res: Response) {
   try {
     const data = await req.json();
     console.log("POST Received data:", data);
+    const startDateString = data.startDate;
+    const endDateString = data.endDate;
     const csvData: CSVData = data.data;
+    console.log(
+      `startDateString: ${startDateString} endDateString:${endDateString}`
+    );
     console.log("POST Received CSV data:", csvData);
 
     if (!Array.isArray(csvData)) {
@@ -48,31 +61,23 @@ export async function POST(req: Request, res: Response) {
       throw new Error("Invalid data format: Expected an array");
     }
 
-    const holdingsToCreate = csvData.map((entry) => {
-      const dateString = entry["TradeDate"];
-      const [month, day, year] = dateString
-        .split("/")
-        .map((component: string) => parseInt(component, 10));
+    const myCurrencies = ["AUD", "CAD", "HKD", "SGD", "USD"];
 
-      const date = new Date(year, month - 1, day); // Month is zero-based in JavaScript Date constructor
+    const dataToCreate = csvData
+      .filter((entry) => myCurrencies.includes(entry["Currency Code"]))
+      .map((entry) => {
+        return {
+          startDate: new Date(startDateString),
+          endDate: new Date(endDateString),
+          currencyCode: entry["Currency Code"],
+          exchangeRate: entry["Sterling value of Currency Unit £"],
+        };
+      });
 
-      return {
-        tradeDate: date,
-        instrumentCode: entry["Symbol"],
-        marketCode: entry["Exchange"],
-        quantity: parseInt(entry["Quantity"], 0),
-        price: parseFloat(entry["TradePrice"]),
-        transactionType: entry["Buy/Sell"],
-        exchangeRate: parseFloat(entry["FXRateToBase"]),
-        brokerage: parseFloat(entry["IBCommission"]),
-        brokerageCurrency: entry["IBCommissionCurrency"],
-      };
+    const dataCreated = await prisma.exchangeRateYearly.createMany({
+      data: dataToCreate,
     });
-
-    const holdingsCreated = await prisma.holding.createMany({
-      data: holdingsToCreate,
-    });
-    return NextResponse.json(holdingsCreated, { status: 201 });
+    return NextResponse.json(dataCreated, { status: 201 });
   } catch (error) {
     console.error("request error", error);
     NextResponse.json({ error: "error updating post" }, { status: 500 });
