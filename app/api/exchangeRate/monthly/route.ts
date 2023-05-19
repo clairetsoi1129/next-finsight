@@ -36,8 +36,16 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export function dateStrToDate(dateString: string) {
+export function dateStrMMDDYYYYToDate(dateString: string) {
   const [month, day, year] = dateString
+    .split("/")
+    .map((component: string) => parseInt(component, 10));
+
+  return new Date(year, month - 1, day); // Month is zero-based in JavaScript Date constructor
+}
+
+export function dateStrDDMMYYYYToDate(dateString: string) {
+  const [day, month, year] = dateString
     .split("/")
     .map((component: string) => parseInt(component, 10));
 
@@ -47,13 +55,13 @@ export function dateStrToDate(dateString: string) {
 export async function POST(req: Request, res: Response) {
   try {
     const data = await req.json();
-    // console.log("POST Received data:", data);
-    const startDateString = data.startDate;
-    const endDateString = data.endDate;
+    console.log("POST monthly Received data:", data);
+    // const startDateString = data.startDate;
+    // const endDateString = data.endDate;
     const csvData: CSVData = data.data;
-    console.log(
-      `startDateString: ${startDateString} endDateString:${endDateString}`
-    );
+    // console.log(
+    //   `startDateString: ${startDateString} endDateString:${endDateString}`
+    // );
     // console.log("POST Received CSV data:", csvData);
 
     if (!Array.isArray(csvData)) {
@@ -63,20 +71,26 @@ export async function POST(req: Request, res: Response) {
 
     const myCurrencies = ["AUD", "CAD", "HKD", "SGD", "USD"];
 
+    const currCodeHeader = "CURRENCY CODE";
+
     const dataToCreate = csvData
-      .filter((entry) => myCurrencies.includes(entry["CURRENCY CODE"]))
+      .filter((entry) => myCurrencies.includes(entry[currCodeHeader]))
       .map((entry) => {
+        const startDate = dateStrDDMMYYYYToDate(entry["START DATE"]);
+        const endDate = dateStrDDMMYYYYToDate(entry["END DATE"]);
+
+        console.log(
+          `adding data ${entry[currCodeHeader]} ${startDate} - ${endDate} : ${entry["URRENCY UNITS PER �1"]}`
+        );
         return {
-          startDate: new Date(startDateString),
-          endDate: new Date(endDateString),
-          currencyCode: entry["CURRENCY CODE"],
-          exchangeRate: entry["STERLING VALUE OF CURRENCY UNIT £"]
-            ? entry["STERLING VALUE OF CURRENCY UNIT £"]
-            : entry["STERLING VALUE OF CURRENCY UNIT �"],
+          startDate: startDate,
+          endDate: endDate,
+          currencyCode: entry[currCodeHeader],
+          exchangeRate: entry["CURRENCY UNITS PER �1"],
         };
       });
 
-    const dataCreated = await prisma.exchangeRateYearly.createMany({
+    const dataCreated = await prisma.exchangeRateMonthly.createMany({
       data: dataToCreate,
     });
     return NextResponse.json(dataCreated, { status: 201 });

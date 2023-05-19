@@ -5,9 +5,9 @@ import { CSVData, Holding } from "@/app/types";
 export async function POST(req: Request, res: Response) {
   try {
     const data = await req.json();
-    console.log("POST Received data:", data);
+    // console.log("POST Received data:", data);
     const csvData: CSVData = data.data;
-    console.log("POST Received CSV data:", csvData);
+    // console.log("POST Received CSV data:", csvData);
 
     const holdingData = {
       tradeDate: new Date(data.tradeDate),

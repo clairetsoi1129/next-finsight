@@ -161,7 +161,6 @@ GRANT ALL PRIVILEGES ON DATABASE nextfinsight TO dummy;
 ```
 
 npm install prisma --save-dev
-npx prisma init
 
 ```
 
@@ -197,7 +196,62 @@ npx prisma studio
 
 ```
 
+- Step to Add table
+
+1. Add the table in schema.prisma
+2. Create the below directory, remove it if already exist and run the command below
+
+```
+mkdir -p prisma/migrations/0_init
+```
+
+3. Run the below command to generate migration script
+
+```
+npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma --script > prisma/migrations/0_init/migration.sql
+```
+
+4. Review the sql and remove the tables that you don't want to change
+5. Run the below command to apply the change
+
+```
+npx prisma migrate resolve --applied 0_init
+```
+
 > Or, goto postgres console to query the data directly
+
+model Interest {
+id Int @id @default(autoincrement())
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+payDate DateTime
+instrumentCode String
+amount Decimal @db.Decimal(12, 6)
+currencyCode String?
+exchangeRate Decimal @db.Decimal(12, 6)
+exchangeRateYearly Decimal? @db.Decimal(12, 6)
+exchangeRateMonthly Decimal? @db.Decimal(12, 6)
+exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
+}
+
+model Dividend {
+id Int @id @default(autoincrement())
+createdAt DateTime @default(now())
+updatedAt DateTime @updatedAt
+payDate DateTime
+instrumentCode String
+quantity Int
+tax Decimal @db.Decimal(12, 6)
+fee Decimal @db.Decimal(12, 6)
+grossRate Decimal @db.Decimal(12, 6)
+grossAmount Decimal @db.Decimal(12, 6)
+netAmount Decimal @db.Decimal(12, 6)
+currencyCode String?
+exchangeRate Decimal @db.Decimal(12, 6)
+exchangeRateYearly Decimal? @db.Decimal(12, 6)
+exchangeRateMonthly Decimal? @db.Decimal(12, 6)
+exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
+}
 
 ## Reference:
 

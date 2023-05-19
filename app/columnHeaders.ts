@@ -42,3 +42,8 @@ export const columnHeadersYearlyExchangeRate: string[] = [
   "Currency Code",
   "Sterling value of Currency Unit £",
 ];
+
+export const columnHeadersMonthlyExchangeRate: string[] = [
+  "Currency Code",
+  "Currency units per �1",
+];

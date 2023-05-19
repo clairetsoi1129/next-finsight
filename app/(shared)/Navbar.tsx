@@ -14,6 +14,9 @@ const Navbar = (props: Props) => {
           <Link href="/upload-exchange-rate-yearly">
             Upload Exchange Rate Yearly
           </Link>
+          <Link href="/upload-exchange-rate-monthly">
+            Upload Exchange Rate Monthly
+          </Link>
         </div>
         <div>
           <p>Sign In</p>

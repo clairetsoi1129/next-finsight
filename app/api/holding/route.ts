@@ -24,7 +24,7 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
       where: whereClause,
     });
 
-    console.log(holdings);
+    // console.log(holdings);
 
     return NextResponse.json(holdings, { status: 200 });
   } catch (error) {
@@ -39,9 +39,9 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
 export async function POST(req: Request, res: Response) {
   try {
     const data = await req.json();
-    console.log("POST Received data:", data);
+    // console.log("POST Received data:", data);
     const csvData: CSVData = data.data;
-    console.log("POST Received CSV data:", csvData);
+    // console.log("POST Received CSV data:", csvData);
 
     if (!Array.isArray(csvData)) {
       console.error("Invalid data format: Expected an array");
@@ -49,7 +49,7 @@ export async function POST(req: Request, res: Response) {
     }
 
     const holdingsToCreate = csvData.map((entry) => {
-      const dateString = entry["TradeDate"];
+      const dateString = entry["TRADEDATE"];
       const [month, day, year] = dateString
         .split("/")
         .map((component: string) => parseInt(component, 10));
@@ -58,14 +58,14 @@ export async function POST(req: Request, res: Response) {
 
       return {
         tradeDate: date,
-        instrumentCode: entry["Symbol"],
-        marketCode: entry["Exchange"],
-        quantity: parseInt(entry["Quantity"], 0),
-        price: parseFloat(entry["TradePrice"]),
-        transactionType: entry["Buy/Sell"],
-        exchangeRate: parseFloat(entry["FXRateToBase"]),
-        brokerage: parseFloat(entry["IBCommission"]),
-        brokerageCurrency: entry["IBCommissionCurrency"],
+        instrumentCode: entry["SYMBOL"],
+        marketCode: entry["EXCHANGE"],
+        quantity: parseInt(entry["QUANTITY"], 0),
+        price: parseFloat(entry["TRADEPRICE"]),
+        transactionType: entry["BUY/SELL"],
+        exchangeRate: parseFloat(entry["FXRATETOBASE"]),
+        brokerage: parseFloat(entry["IBCOMMISSION"]),
+        brokerageCurrency: entry["IBCOMMISSIONCURRENCY"],
       };
     });
 

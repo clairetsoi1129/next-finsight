@@ -11,7 +11,7 @@ registerPlugin();
 
 type CSVUploaderProps = {
   columnHeaders: string[];
-  onDataParsed: (data: CSVData[]) => void;
+  onDataParsed: (data: CSVData[], filename: string) => void;
   fileType: string;
 };
 
@@ -29,7 +29,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
         const file = files[0].file;
         const csvString = await file.text();
         const parsedData = await parseCSV(csvString, fileType);
-        onDataParsed(parsedData);
+        onDataParsed(parsedData, file.name);
       } catch (error) {
         console.error("Error parsing CSV:", error);
       }
@@ -44,13 +44,14 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
       const data: CSVData[] = [];
 
       let skip = 0;
-      if (fileType === "exchangeRate") {
+      if (fileType === "yearlyExchangeRate") {
         skip = 1;
       }
 
       const parser = csvParser({
         skipLines: skip,
-        mapHeaders: ({ header }) => header.replace(/"/g, ""),
+        mapHeaders: ({ header }) =>
+          header.toUpperCase().trim().replace(/"/g, ""),
       });
 
       parser
@@ -65,7 +66,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
         });
 
       parser.write(csvString);
-      console.log(`csvString:${csvString}`);
+      // console.log(`csvString:${csvString}`);
       parser.end();
     });
   };
@@ -74,7 +75,7 @@ const CSVUploader: React.FC<CSVUploaderProps> = ({
     <div>
       <FilePond ref={filePondRef} acceptedFileTypes={[".csv"]} />
       <button onClick={handleFileUpload} className="btn btn-primary">
-        Upload
+        Upload {fileType}
       </button>
     </div>
   );

@@ -1,62 +1,81 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
   relationMode = "prisma"
 }
 
 model Holding {
-  id        Int    @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  tradeDate DateTime  
-  instrumentCode  String
-  marketCode   String    @db.Text
-  quantity    Int
-  price     Decimal @db.Decimal(12,6)
-  transactionType String
-  exchangeRate Decimal @db.Decimal(12,6)
-  brokerage Decimal @db.Decimal(12,6)
-  brokerageCurrency String
+  id                         Int      @id @default(autoincrement())
+  createdAt                  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt                  DateTime @updatedAt @db.Timestamptz(3)
+  tradeDate                  DateTime @db.Timestamptz(3)
+  instrumentCode             String
+  marketCode                 String
+  quantity                   Int
+  price                      Decimal  @db.Decimal(12, 6)
+  transactionType            String
+  exchangeRate               Decimal  @db.Decimal(12, 6)
+  brokerage                  Decimal  @db.Decimal(12, 6)
+  brokerageCurrency          String
+  exchangeRateYearly         Decimal? @db.Decimal(12, 6)
+  currencyCode               String?
+  exchangeRateMonthly        Decimal? @db.Decimal(12, 6)
+  exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
 }
 
 model ExchangeRateYearly {
-  id        Int    @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  startDate  DateTime
-  endDate  DateTime
-  currencyCode   String    @db.Text
-  exchangeRate Decimal @db.Decimal(12,6)
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(3)
+  startDate    DateTime @db.Timestamptz(3)
+  endDate      DateTime @db.Timestamptz(3)
+  currencyCode String
+  exchangeRate Decimal  @db.Decimal(12, 6)
 }
 
 model ExchangeRateMonthly {
-  id        Int    @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  startDate DateTime  
-  endDate DateTime  
-  currencyCode   String    @db.Text
-  exchangeRate Decimal @db.Decimal(12,6)
+  id           Int      @id @default(autoincrement())
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime @updatedAt @db.Timestamptz(3)
+  startDate    DateTime @db.Timestamptz(3)
+  endDate      DateTime @db.Timestamptz(3)
+  exchangeRate Decimal  @db.Decimal(12, 6)
+  currencyCode String
 }
 
+model Interest {
+  id                         Int      @id @default(autoincrement())
+  createdAt                  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt                  DateTime @updatedAt @db.Timestamptz(3)
+  payDate                  DateTime @db.Timestamptz(3)
+  instrumentCode             String
+  amount                 Decimal  @db.Decimal(12, 6)
+  currencyCode               String? 
+  exchangeRate               Decimal  @db.Decimal(12, 6)
+  exchangeRateYearly         Decimal? @db.Decimal(12, 6)
+  exchangeRateMonthly        Decimal? @db.Decimal(12, 6)
+  exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
+}
 
-// enum TransactionType {
-//   BUY
-//   SELL
-// }
-
-// enum Currency {
-//   AUD
-//   SGD
-//   HKD
-//   GBP
-//   USD
-//   CAD
-// }
+model Dividend {
+  id                         Int      @id @default(autoincrement())
+  createdAt                  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt                  DateTime @updatedAt @db.Timestamptz(3)
+  payDate                  DateTime @db.Timestamptz(3)
+  instrumentCode             String
+  quantity                   Int
+  tax                 Decimal  @db.Decimal(12, 6)
+  fee                 Decimal  @db.Decimal(12, 6)
+  grossRate                 Decimal  @db.Decimal(12, 6)
+  grossAmount                 Decimal  @db.Decimal(12, 6)
+  netAmount                 Decimal  @db.Decimal(12, 6)
+  currencyCode               String? 
+  exchangeRate               Decimal  @db.Decimal(12, 6)
+  exchangeRateYearly         Decimal? @db.Decimal(12, 6)
+  exchangeRateMonthly        Decimal? @db.Decimal(12, 6)
+  exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
+}

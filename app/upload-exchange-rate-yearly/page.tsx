@@ -13,21 +13,6 @@ const UploadYearlyExchangeRate = () => {
   const [endDate, setEndDate] = useState(new Date());
   const [startDate, setStartDate] = useState(new Date());
 
-  const convertEndDate = (dateString: string) => {
-    // const dateString = 'Average for the year to 31 March 2023';
-    const formattedDate = new Date(
-      dateString.replace("Average for the year to ", "")
-    );
-
-    const month = formattedDate.getMonth() + 1;
-    const day = formattedDate.getDate();
-    const year = formattedDate.getFullYear();
-    const date = `${month.toString().padStart(2, "0")}-${day
-      .toString()
-      .padStart(2, "0")}-${year}`;
-    return date;
-  };
-
   const handleDataParsed = async (dataToCreate: CSVData[]) => {
     // Do something with the parsed data
     console.log(dataToCreate);
@@ -125,7 +110,7 @@ const UploadYearlyExchangeRate = () => {
         <CSVUploader
           columnHeaders={columnHeadersYearlyExchangeRate}
           onDataParsed={handleDataParsed}
-          fileType="exchangeRate"
+          fileType="yearlyExchangeRate"
         />
       </Box>
     </Box>

@@ -21,85 +21,84 @@ const Row1 = (props: Props) => {
   const [endDate, setEndDate] = useState<string>("2023-04-05");
 
   const filterByDate = () => {
-    console.log(`filterDate****`);
+    // console.log(`filterDate****`);
     setStartDate("2022-04-06");
     setEndDate("2023-04-05");
   };
 
-  useEffect(() => {
-    const getAllHoldings = async () => {
-      // Step 1: Get the trading records from Database
-      const response = await fetch(
-        // `${process.env.NEXT_PUBLIC_URL}/api/holding`
-        `${process.env.NEXT_PUBLIC_URL}/api/holding?startDate=${startDate}&endDate=${endDate}`
-      );
-      const tradingRecords = await response.json();
-      console.log(`AllHoldings: ${tradingRecords}`);
-      setHoldings(tradingRecords);
+  async function getAllHoldings() {
+    // Step 1: Get the trading records from Database
+    const response = await fetch(
+      // `${process.env.NEXT_PUBLIC_URL}/api/holding`
+      `${process.env.NEXT_PUBLIC_URL}/api/holding?startDate=${startDate}&endDate=${endDate}`
+    );
+    const tradingRecords = await response.json();
+    // console.log(`AllHoldings: ${tradingRecords}`);
+    setHoldings(tradingRecords);
 
-      // Step 2: Group the trading records by ticker
-      const groupedRecords: { [key: string]: Holding[] } =
-        tradingRecords.reduce(
-          (groups: { [key: string]: Holding[] }, record: Holding) => {
-            const { instrumentCode } = record;
-            if (!groups[instrumentCode]) {
-              groups[instrumentCode] = [];
-            }
-            groups[instrumentCode].push(record);
-            return groups;
-          },
-          {}
-        );
-
-      // Step 3: Calculate the capital gain for each ticker
-      const capitalGains: { [key: string]: number } = {};
-
-      for (const ticker in groupedRecords) {
-        const records = groupedRecords[ticker];
-
-        const totalProceeds = records.reduce((sum: number, record: Holding) => {
-          console.log(
-            `${Number(record.price)}*${record.quantity}*${Number(
-              record.exchangeRate
-            )}`
-          );
-          return (
-            sum +
-            Number(record.price) * record.quantity * Number(record.exchangeRate)
-          );
-        }, 0);
-
-        console.log(`ticker: ${ticker} totalProceeds: ${totalProceeds}`);
-        const totalCost = records.reduce(
-          (sum: number, record: Holding) => sum + Number(record.brokerage),
-          0
-        );
-
-        capitalGains[ticker] = -totalProceeds; // + totalCost;
-      }
-      const rowsSummary = Object.entries(capitalGains).map(
-        ([ticker, gain], index) => {
-          const quantityRemain: number = groupedRecords[ticker].reduce(
-            (sum: number, record: Holding) => sum + record.quantity,
-            0
-          );
-          return {
-            id: index, // Unique identifier for each row
-            ticker,
-            gain,
-            quantityRemain,
-          };
+    // Step 2: Group the trading records by ticker
+    const groupedRecords: { [key: string]: Holding[] } = tradingRecords.reduce(
+      (groups: { [key: string]: Holding[] }, record: Holding) => {
+        const { instrumentCode } = record;
+        if (!groups[instrumentCode]) {
+          groups[instrumentCode] = [];
         }
-      );
-      setRowsSummary(rowsSummary);
+        groups[instrumentCode].push(record);
+        return groups;
+      },
+      {}
+    );
 
-      // Step 4: Calculate the total capital gain
-      const totalCapitalGain = Object.values(capitalGains).reduce(
-        (sum, capitalGain) => sum + capitalGain,
+    // Step 3: Calculate the capital gain for each ticker
+    const capitalGains: { [key: string]: number } = {};
+
+    for (const ticker in groupedRecords) {
+      const records = groupedRecords[ticker];
+
+      const totalProceeds = records.reduce((sum: number, record: Holding) => {
+        // console.log(
+        //   `${Number(record.price)}*${record.quantity}*${Number(
+        //     record.exchangeRate
+        //   )}`
+        // );
+        return (
+          sum +
+          Number(record.price) * record.quantity * Number(record.exchangeRate)
+        );
+      }, 0);
+
+      // console.log(`ticker: ${ticker} totalProceeds: ${totalProceeds}`);
+      const totalCost = records.reduce(
+        (sum: number, record: Holding) => sum + Number(record.brokerage),
         0
       );
-    };
 
+      capitalGains[ticker] = -totalProceeds; // + totalCost;
+    }
+    const rowsSummary = Object.entries(capitalGains).map(
+      ([ticker, gain], index) => {
+        const quantityRemain: number = groupedRecords[ticker].reduce(
+          (sum: number, record: Holding) => sum + record.quantity,
+          0
+        );
+        return {
+          id: index, // Unique identifier for each row
+          ticker,
+          gain,
+          quantityRemain,
+        };
+      }
+    );
+    setRowsSummary(rowsSummary);
+
+    // Step 4: Calculate the total capital gain
+    const totalCapitalGain = Object.values(capitalGains).reduce(
+      (sum, capitalGain) => sum + capitalGain,
+      0
+    );
+  }
+
+  useEffect(() => {
     getAllHoldings();
   }, [startDate, endDate]);
 
