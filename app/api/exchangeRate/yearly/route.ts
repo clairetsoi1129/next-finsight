@@ -50,6 +50,11 @@ export async function POST(req: Request, res: Response) {
     // console.log("POST Received data:", data);
     const startDateString = data.startDate;
     const endDateString = data.endDate;
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(23, 59, 59, 0);
+
     const csvData: CSVData = data.data;
     console.log(
       `startDateString: ${startDateString} endDateString:${endDateString}`
@@ -67,8 +72,8 @@ export async function POST(req: Request, res: Response) {
       .filter((entry) => myCurrencies.includes(entry["CURRENCY CODE"]))
       .map((entry) => {
         return {
-          startDate: new Date(startDateString),
-          endDate: new Date(endDateString),
+          startDate: startDate,
+          endDate: endDate,
           currencyCode: entry["CURRENCY CODE"],
           exchangeRate: entry["STERLING VALUE OF CURRENCY UNIT £"]
             ? entry["STERLING VALUE OF CURRENCY UNIT £"]

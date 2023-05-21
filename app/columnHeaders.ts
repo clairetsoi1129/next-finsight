@@ -47,3 +47,17 @@ export const columnHeadersMonthlyExchangeRate: string[] = [
   "Currency Code",
   "Currency units per �1",
 ];
+
+export const columnHeadersInterestIB: string[] = [
+  "Currency",
+  "Date",
+  "Description",
+  "Amount",
+];
+
+export const columnHeadersDividendIB: string[] = [
+  "Currency",
+  "Date",
+  "Description",
+  "Amount",
+];
