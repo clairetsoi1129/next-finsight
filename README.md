@@ -75,14 +75,12 @@ npm install next-themes
 ## CSV Parser
 
 ```
-
 npm install csv-parser
-
 ```
 
-## Postresql
+## Database: Postresql
 
-### Install Postgresql
+### Choice 1: Install postgreSQL directly
 
 ```
 
@@ -90,7 +88,7 @@ brew install postgresql
 
 ```
 
-### Install Postgresql Admin
+- Install postgreSQL Admin
 
 ```
 
@@ -98,7 +96,7 @@ brew install --cask pgadmin4
 
 ```
 
-### Start Postgresql
+- Start postgreSQL
 
 ```
 
@@ -106,7 +104,7 @@ brew services start postgresql@14
 
 ```
 
-### Run Postgresql
+- Run postgreSQL
 
 ```
 
@@ -114,64 +112,85 @@ psql postgres
 
 ```
 
+### Choice 2: Install Postgresql through docker
+
+- Install Docker
+
+Follow the instruction to download and install docker.
+https://docs.docker.com/desktop/install/
+
+- pull postgreSQL image from docker
+
+```
+docker pull postgres
+```
+
+Reference: https://hub.docker.com/_/postgres
+
+- Start and remove the postgreSQL container
+
+```
+docker compose up
+```
+
+- Stop and remove the postgreSQL container
+
+```
+docker compose down
+```
+
+- Connect postgreSQL in docker
+
+- Connect postgreSQL to verify data by interactive terminal
+
+```
+docker exec -it postgresql psql -U username -d nextfinsight
+```
+
 ### List the database
 
 ```
-
 \l
-
 ```
 
 ### Create Database with name nextfinsight
 
 ```
-
 CREATE DATABASE nextfinsight;
-
 ```
 
 ### Create User with name dummy and grant all access to database nextfinsight to this user
 
+- Replace <your-password> with any password you like.
+
 ```
-
 CREATE USER dummy WITH PASSWORD '<your-password>';
-
 ```
 
 ### Grant permission to the user dummy
 
 ```
-
 GRANT ALL PRIVILEGES ON DATABASE nextfinsight TO dummy;
-
 ```
-
-> Replace <your-password> with any password you like.
 
 ### Connect to database nextfinsight
 
 ```
-
 \c nextfinsight
-
 ```
 
 ## Prisma
 
-```
+- Install prisma
 
+```
 npm install prisma --save-dev
-
 ```
-
-4. Prisma
 
 - Init prisma
 
 ```
-
 npx prisma init
-
 ```
 
 - Create schema in schema.prisma (run when there is any update in schema.prisam)
@@ -179,21 +198,17 @@ npx prisma init
 - Push to Prisma (This step will solve the issue in Cannot find module '@prisma/client' in client.ts)
 
 ```
-
 npx prisma db push
-
 ```
 
 - Check the Holding table is created
 
 - Check data is created in the database
 
-> Run below command to see the data in Prisma studio
+- Run below command to see the data in Prisma studio
 
 ```
-
 npx prisma studio
-
 ```
 
 - Step to Add table
@@ -218,40 +233,121 @@ npx prisma migrate diff --from-empty --to-schema-datamodel prisma/schema.prisma 
 npx prisma migrate resolve --applied 0_init
 ```
 
-> Or, goto postgres console to query the data directly
+- Or, goto postgres console to query the data directly
 
-model Interest {
-id Int @id @default(autoincrement())
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-payDate DateTime
-instrumentCode String
-amount Decimal @db.Decimal(12, 6)
-currencyCode String?
-exchangeRate Decimal @db.Decimal(12, 6)
-exchangeRateYearly Decimal? @db.Decimal(12, 6)
-exchangeRateMonthly Decimal? @db.Decimal(12, 6)
-exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
-}
+## Dockerize the next.js app, prisma and postgresql
 
-model Dividend {
-id Int @id @default(autoincrement())
-createdAt DateTime @default(now())
-updatedAt DateTime @updatedAt
-payDate DateTime
-instrumentCode String
-quantity Int
-tax Decimal @db.Decimal(12, 6)
-fee Decimal @db.Decimal(12, 6)
-grossRate Decimal @db.Decimal(12, 6)
-grossAmount Decimal @db.Decimal(12, 6)
-netAmount Decimal @db.Decimal(12, 6)
-currencyCode String?
-exchangeRate Decimal @db.Decimal(12, 6)
-exchangeRateYearly Decimal? @db.Decimal(12, 6)
-exchangeRateMonthly Decimal? @db.Decimal(12, 6)
-exchangeRateMonthlyInverse Decimal? @db.Decimal(12, 6)
-}
+1. Build the Docker image for the current folder and tag it with `docker-next-finsight-image`
+
+```
+docker build -t docker-next-finsight-image .
+```
+
+2. Check the image was created
+
+```
+docker images | grep docker-next-finsight-image
+```
+
+3. Start the container
+
+```
+docker compose up
+```
+
+4. Stop the container
+
+```
+docker compose down
+```
+
+#### Appendix 1: Run the image in detached mode and map port 3000 inside the container with 3000 on current host
+
+```
+docker run -p 3000:3000 -d docker-next-finsight-image
+
+```
+
+#### Appendix 2: Start postgreSQL
+
+- run in detached mode (background mode)
+
+```
+docker run --name postgres-sql-detached -p 1234:5432 -d -e POSTGRES_PASSWORD=password -e POSTGRES_USER=username -e POSTGRES_DB=nextfinsight -v /Users/claire/docker/volumes/postgres/data:/var/lib/postgres/data postgres
+```
+
+Replace password with your selected password for superuser of the database
+
+#### Appendix 3: stop postgreSQL
+
+- run the below command to find the container id of the postgresql
+
+```
+docker ps
+```
+
+- run the below command to replace the #containerId#
+
+```
+docker stop #containerId#
+```
+
+#### Appendix 4: Notes for not using docker compose to manage image, container and network:
+
+- Start/Stop the docker container
+
+```
+docker start #containerId#
+docker stop #containerId#
+```
+
+- Remove the docker container
+
+```
+docker rm #containerId#
+```
+
+- Check logs
+
+```
+docker logs -f my-postgres
+```
+
+- check images of docker
+
+```
+docker images
+```
+
+- remove docker images
+
+```
+docker rmi #imageId#
+```
+
+- list the network in docker
+
+```
+docker network ls
+```
+
+- create network in docker
+
+```
+docker network create next-finsight-net
+```
+
+- connect to the network
+
+```
+docker network connect next-finsight-net postgres-sql-detached
+```
+
+- expose port to outside network
+
+```
+docker run -p 5432:5432 --net next-finsight-net docker-next-finsight-i
+```
 
 ## Reference:
 
