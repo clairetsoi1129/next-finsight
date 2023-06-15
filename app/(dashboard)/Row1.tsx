@@ -100,6 +100,7 @@ const Row1 = (props: Props) => {
 
   useEffect(() => {
     getAllHoldings();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [startDate, endDate]);
 
   const columnsRaw: GridColDef[] = [

@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../../client";
 import { CSVData, Holding } from "@/app/types";
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
     // console.log("POST Received data:", data);
@@ -27,6 +27,6 @@ export async function POST(req: Request, res: Response) {
     return NextResponse.json(holdingCreated, { status: 201 });
   } catch (error) {
     console.error("request error", error);
-    NextResponse.json({ error: "error updating post" }, { status: 500 });
+    return NextResponse.json({ error: "error updating post" }, { status: 500 });
   }
 }

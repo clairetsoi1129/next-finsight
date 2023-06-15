@@ -1,13 +1,14 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "../client";
 import { CSVData } from "@/app/types";
-import { NextApiRequest, NextApiResponse } from "next";
 
 type Params = { query: { startDate: string; endDate: string } };
 
-export async function GET(req: NextApiRequest, res: NextApiResponse) {
+export async function GET(req: NextRequest, res: NextResponse) {
   try {
-    const { startDate, endDate } = req.query || {};
+    const { searchParams } = new URL(req.url);
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
 
     let whereClause = {};
 
@@ -27,14 +28,14 @@ export async function GET(req: NextApiRequest, res: NextApiResponse) {
     return NextResponse.json(interests, { status: 200 });
   } catch (error) {
     console.log(`${error}`);
-    NextResponse.json(
+    return NextResponse.json(
       { error: "Failed to fetch all holdings" },
       { status: 500 }
     );
   }
 }
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
     const data = await req.json();
     console.log("POST Received data:", data);
@@ -69,6 +70,6 @@ export async function POST(req: Request, res: Response) {
     return NextResponse.json(interestsCreated, { status: 201 });
   } catch (error) {
     console.error("request error", error);
-    NextResponse.json({ error: "error updating post" }, { status: 500 });
+    return NextResponse.json({ error: "error updating post" }, { status: 500 });
   }
 }
